@@ -1,0 +1,36 @@
+enum AppRoles {
+  Admin
+  Manager
+  User
+}
+type User {
+  id: ID! @id
+  name: String!
+  email: String! @unique
+  password: String!
+  role: AppRoles!
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+  posts: [Post]! @relation(name: "UserPosts", link: TABLE, onDelete: CASCADE)
+  comments: [Comment]! @relation(name: "UserComments", link: TABLE, onDelete: CASCADE)
+}
+
+type Post {
+  id: ID! @id
+  title: String!
+  body: String!
+  published: Boolean! @default(value: false)
+  author: User! @relation(name: "UserPosts")
+  comments: [Comment]! @relation(name: "PostComments", link: TABLE, onDelete: CASCADE)
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+}
+
+type Comment {
+  id: ID! @id
+  body: String!
+  author: User! @relation(name: "UserComments")
+  post: Post! @relation(name: "PostComments")
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+}
